@@ -96,6 +96,9 @@ input::placeholder{color:var(--muted)}
 .btn:active{transform:scale(.94)}
 footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:28px}
 [hidden]{display:none!important}
+.tr{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.35);display:grid;place-items:center}
+.tr iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
 .sk{aspect-ratio:2/3;border-radius:20px;background:rgba(255,255,255,.1);animation:skp 1.2s ease-in-out infinite}
 @keyframes skp{50%{opacity:.4}}
 @media (min-width:700px){main{padding:30px 24px 60px}.grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}.hero{padding:56px 24px}.bar{padding:18px}.sheet{max-width:520px}}
@@ -111,6 +114,7 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:28px}
 <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
 <symbol id="i-bm" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
 <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></symbol>
 </svg>
 <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
 <main>
@@ -155,15 +159,25 @@ const im=a=>`<img src="${a.img}" alt="" loading="lazy" referrerpolicy="no-referr
 const art=a=>`<div class="art" style="${artStyle(a.id)}"><svg class="m" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid slice">${MO[a.g[0]]||MO[AL[a.g[0]]]||MO.Fantasy}</svg>${a.img?im(a):""}${ini(a.t)}<i>${a.y}</i></div>`;
 const card=(a,i)=>`<article class="card glass" data-id="${a.id}" style="animation-delay:${Math.min(i,14)*45}ms">${art(a)}<button class="bm${WL[a.id]?" on":""}" aria-label="Toggle watchlist">${ico("bm")}</button><h3>${a.t}</h3><div class="meta">${a.m}${a.y?" · "+a.y:""}</div><div class="tags">${a.g.slice(0,2).map(x=>`<span class="tag">${x}</span>`).join("")}</div></article>`;
 const skel=()=>'<div class="sk"></div>'.repeat(10);
+const okU=u=>/^https:\/\//i.test(u||"");
+const wl=L=>{const seen=new Set();return (L||[]).filter(x=>x.type==="STREAMING"&&okU(x.url)&&!seen.has(x.site)&&seen.add(x.site)).slice(0,6).map(x=>({s:x.site,u:x.url}))};
+const hx=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function extra(a){
+const yt=a.tr&&/^[\w-]{6,15}$/.test(a.tr);
+const tr=yt?`<div class="tr" id="tr" style="background:url(https://img.youtube.com/vi/${a.tr}/hqdefault.jpg) center/cover"><button class="btn main" id="trb" data-v="${a.tr}">${ico("play")} Play trailer</button></div>`:`<a class="btn" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/results?search_query=${encodeURIComponent(a.t+" official trailer")}">${ico("play")} Find trailer on YouTube</a>`;
+const w=(a.w||[]).map(x=>`<a class="btn" target="_blank" rel="noopener noreferrer" href="${hx(x.u)}">${hx(x.s)}</a>`).join("");
+const al=okU(a.al)?`<a class="btn" target="_blank" rel="noopener noreferrer" href="${hx(a.al)}">AniList</a>`:"";
+return `${tr}<div class="lbl" style="margin:14px 0 6px">Watch on (official)</div><div class="row" style="margin-bottom:16px">${w||'<span class="meta">No official streaming links listed.</span>'}${al}</div>`;
+}
 function norm(m){let d=(m.description||"").replace(/~!.*?!~/gs,"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();if(d.length>260)d=d.slice(0,260).replace(/\s\S*$/,"")+"…";
-return{id:m.id,t:m.title.english||m.title.romaji,y:m.seasonYear||"",m:m.format==="MOVIE"?"Movie":m.format==="ONA"?"ONA":"Series",g:m.genres||[],d,img:(m.coverImage&&m.coverImage.large)||"",s:m.averageScore||0}}
+return{id:m.id,t:m.title.english||m.title.romaji,y:m.seasonYear||"",m:m.format==="MOVIE"?"Movie":m.format==="ONA"?"ONA":"Series",g:m.genres||[],d,img:(m.coverImage&&m.coverImage.large)||"",s:m.averageScore||0,al:m.siteUrl||"",tr:m.trailer&&m.trailer.site==="youtube"?m.trailer.id:"",w:wl(m.externalLinks)}}
 function args(p,o){
 let a=`type:ANIME,isAdult:false,format_in:[TV,MOVIE,ONA],status_not:NOT_YET_RELEASED,genre_not_in:["Hentai","Ecchi"],sort:[${o.sort}]`;
 if(o.search)a+=`,search:${JSON.stringify(o.search)}`;
 const f=o.sel;
 if(f.k==="mood"){const m=MOODS[f.v];if(m.g)a+=`,genre:${JSON.stringify(m.g)}`;if(m.t)a+=`,tag_in:${JSON.stringify(m.t)}`}
 if(f.k==="genre"){if(f.v==="Isekai")a+=`,tag_in:["Isekai"]`;else a+=`,genre:${JSON.stringify(f.v)}`}
-return `{Page(page:${p},perPage:24){pageInfo{hasNextPage}media(${a}){id title{english romaji}seasonYear format genres description(asHtml:false)coverImage{large}averageScore}}}`}
+return `{Page(page:${p},perPage:24){pageInfo{hasNextPage}media(${a}){id title{english romaji}seasonYear format genres description(asHtml:false)coverImage{large}averageScore siteUrl trailer{id site}externalLinks{site url type}}}}`}
 async function gql(query){const r=await fetch("https://graphql.anilist.co",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({query})});const j=await r.json();if(!j.data)throw new Error("api");return j.data}
 function chips(){
 $("moods").innerHTML=Object.entries(MOODS).map(([k,m])=>`<button class="chip${sel.k==="mood"&&sel.v===k?" on":""}" data-m="${k}">${m.n}</button>`).join("");
@@ -212,9 +226,9 @@ const c=$("cnt");c.textContent=Object.keys(WL).length;c.classList.remove("bump")
 }
 function detail(a){
 const on=!!WL[a.id];
-$("sheet").innerHTML=`<button class="x" id="cl" aria-label="Close">${ico("x")}</button>${art(a)}<h2>${a.t}</h2><div class="meta">${a.m}${a.y?" · "+a.y:""}${a.s?" · Score "+a.s:""}</div><p>${a.d||"No description available."}</p><div class="tags" style="margin-bottom:16px">${a.g.map(x=>`<span class="tag">${x}</span>`).join("")}</div><div class="row"><button class="btn main" id="sv" data-id="${a.id}">${ico("bm")} ${on?"Saved":"Add to watchlist"}</button><button class="btn" id="again">${ico("dice")} Another</button></div>`;
+$("sheet").innerHTML=`<button class="x" id="cl" aria-label="Close">${ico("x")}</button>${art(a)}<h2>${a.t}</h2><div class="meta">${a.m}${a.y?" · "+a.y:""}${a.s?" · Score "+a.s:""}</div><p>${a.d||"No description available."}</p><div class="tags" style="margin-bottom:16px">${a.g.map(x=>`<span class="tag">${x}</span>`).join("")}</div>${extra(a)}<div class="row"><button class="btn main" id="sv" data-id="${a.id}">${ico("bm")} ${on?"Saved":"Add to watchlist"}</button><button class="btn" id="again">${ico("dice")} Another</button></div>`;
 }
-function close(){$("modal").classList.remove("show")}
+function close(){$("modal").classList.remove("show");$("sheet").innerHTML=""}
 async function surprise(){
 $("modal").classList.add("show");
 $("sheet").innerHTML=`<div class="art shuf" style="${artStyle(0)}">?</div><h2 class="shuf" id="sh">Rolling…</h2>`;
@@ -275,6 +289,8 @@ if(e.target.id==="modal"||e.target.closest("#cl"))return close();
 const sv=e.target.closest("#sv");
 if(sv){const id=+sv.dataset.id;toggle(id);sv.innerHTML=ico("bm")+" "+(WL[id]?"Saved":"Add to watchlist");
 const bm=document.querySelector('.card[data-id="'+id+'"] .bm');if(bm)bm.classList.toggle("on",!!WL[id]);if(onlyWL)showWL()}
+const tb=e.target.closest("#trb");
+if(tb&&$("tr"))$("tr").innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${tb.dataset.v}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Trailer"></iframe>`;
 if(e.target.closest("#again"))surprise();
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
