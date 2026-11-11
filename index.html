@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NextWatch – Anime Picks</title>
+<style>
+:root{--navy:#1b365d;--blue:#055699;--sky:#63c0e4;--ice:#9fdff0;--text:#eef9fd;--muted:#b7d6e6;--glass:rgba(255,255,255,.09);--line:rgba(255,255,255,.2);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:linear-gradient(135deg,var(--navy),var(--blue) 60%,var(--navy));background-attachment:fixed;overflow-x:hidden}
+.orb{position:fixed;border-radius:50%;z-index:0;pointer-events:none;will-change:transform}
+.o1{width:420px;height:420px;background:radial-gradient(circle,rgba(99,192,228,.65),transparent 70%);top:-140px;right:-140px;animation:fl 14s ease-in-out infinite}
+.o2{width:380px;height:380px;background:radial-gradient(circle,rgba(159,223,240,.4),transparent 70%);bottom:-140px;left:-120px;animation:fl 17s ease-in-out infinite reverse}
+.o3{width:300px;height:300px;background:radial-gradient(circle,rgba(5,86,153,.8),transparent 70%);top:40%;left:50%;animation:fl 12s ease-in-out infinite}
+@keyframes fl{50%{transform:translate(40px,-50px) scale(1.15)}}
+main{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:22px 14px 50px}
+.ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em}
+.glass{background:linear-gradient(135deg,rgba(255,255,255,.17),rgba(255,255,255,.06));border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 24px rgba(0,10,30,.25)}
+.blur{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;position:relative;overflow:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;margin-bottom:16px}
+.logo{font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:8px;white-space:nowrap;min-width:0;font-size:clamp(.9rem,4vw,1.1rem)}
+.logo .ic{color:var(--ice);animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wlb{background:rgba(255,255,255,.1);border:1px solid var(--line);border-radius:999px;padding:7px 12px;display:flex;gap:8px;align-items:center;flex-shrink:0;white-space:nowrap;overflow:visible}
+.wlb.on{background:var(--sky);color:var(--navy);font-weight:700}
+.cnt{background:var(--navy);color:var(--ice);border-radius:999px;min-width:22px;padding:0 6px;font-size:.78rem;text-align:center}
+.cnt.bump{animation:bump .4s}
+@keyframes bump{40%{transform:scale(1.6)}}
+.hero{text-align:center;padding:36px 18px;margin-bottom:16px}
+h1{margin:0 0 10px;font-size:clamp(2rem,7vw,3.6rem);line-height:1.05;letter-spacing:-1px}
+h1 span{background:linear-gradient(90deg,var(--ice),#fff,var(--sky),var(--ice));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
+@keyframes shine{to{background-position:250% 0}}
+.hero p{color:var(--muted);margin:0 auto 22px;max-width:460px}
+.big{background:linear-gradient(135deg,var(--sky),var(--ice));color:var(--navy);border:0;border-radius:999px;padding:14px 30px;font-weight:800;font-size:1.05rem;transition:transform .15s}
+.big:hover{transform:scale(1.06) rotate(-1deg)}
+.big:active{transform:scale(.94)}
+.big .ic{margin-right:8px}
+
+.bar{padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:12px}
+.sw{position:relative}
+.sw .ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted)}
+input{width:100%;background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:14px;padding:11px 14px 11px 40px;outline:none;transition:box-shadow .2s,border-color .2s}
+input:focus{border-color:var(--ice);box-shadow:0 0 0 4px rgba(99,192,228,.25)}
+input::placeholder{color:var(--muted)}
+.lbl{font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ice);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.88rem;transition:transform .15s,background .2s}
+.chip:hover{transform:translateY(-2px);background:rgba(255,255,255,.18)}
+.chip:active{transform:scale(.92)}
+.chip.on{background:var(--sky);color:var(--navy);border-color:var(--sky);font-weight:700;animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.15)}}
+.res{color:var(--muted);font-size:.85rem;margin:0 4px 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.card{position:relative;overflow:hidden;padding:12px;display:flex;flex-direction:column;gap:7px;cursor:pointer;opacity:0;animation:rise .55s cubic-bezier(.2,.8,.2,1) forwards;transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .12s}
+@keyframes rise{from{opacity:0;transform:translateY(40px) scale(.9)}to{opacity:1;transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}}
+.card:hover{box-shadow:0 10px 24px rgba(99,192,228,.3)}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--gx,50%) var(--gy,0%),rgba(255,255,255,.22),transparent 55%);opacity:0;transition:opacity .2s;pointer-events:none}
+.card:hover::after{opacity:1}
+.art{aspect-ratio:2/3;border-radius:12px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:8px 10px;font-size:1.5rem;font-weight:900;color:rgba(255,255,255,.85);letter-spacing:-1px;z-index:0}
+.art svg.m{position:absolute;inset:0;width:100%;height:100%;z-index:-1;fill:none;stroke:rgba(255,255,255,.75);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.art svg.m .f{fill:rgba(255,255,255,.3);stroke:none}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;opacity:0;transition:opacity .5s}
+.art img.ok{opacity:1}
+.art.has{color:transparent}
+.art.has::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(transparent 60%,rgba(10,25,50,.85))}
+.art i{position:absolute;right:8px;bottom:6px;font-style:normal;font-size:.72rem;letter-spacing:0;color:var(--ice);font-weight:600}
+.bm{position:absolute;top:18px;right:18px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(27,54,93,.55);backdrop-filter:blur(6px);display:grid;place-items:center;padding:0;z-index:2;transition:transform .2s}
+.bm:hover{transform:scale(1.15)}
+.bm.on{background:var(--ice);color:var(--navy)}
+.bm.on .ic{fill:currentColor;animation:pop .4s}
+.card h3{margin:2px 0 0;font-size:1rem;line-height:1.2}
+.meta{color:var(--muted);font-size:.78rem}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:.7rem;padding:2px 8px;border-radius:999px;background:rgba(159,223,240,.18);border:1px solid var(--line)}
+.empty{text-align:center;color:var(--muted);padding:34px;grid-column:1/-1}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:rp .6s ease-out forwards;pointer-events:none}
+@keyframes rp{to{transform:scale(4);opacity:0}}
+.dot{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:99}
+#modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(10,25,50,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#modal.show{display:flex;animation:fade .25s}
+@keyframes fade{from{opacity:0}}
+.sheet{position:relative;width:100%;max-width:440px;max-height:100%;overflow-y:auto;padding:22px;background:rgba(27,54,93,.8);animation:zoom .4s cubic-bezier(.2,1.2,.3,1)}
+@keyframes zoom{from{transform:scale(.7) translateY(30px);opacity:0}}
+.x{position:absolute;top:30px;right:30px;z-index:5;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:rgba(27,54,93,.85);display:grid;place-items:center;padding:0}
+.sheet .art{width:200px;max-width:100%;margin:0 auto 14px;font-size:2.2rem}
+.sheet h2{margin:0 0 4px}
+.sheet p{color:var(--text);opacity:.92;margin:10px 0 16px}
+.shuf{animation:glitch .15s infinite}
+@keyframes glitch{25%{transform:translateX(-3px);filter:hue-rotate(40deg)}75%{transform:translateX(3px)}}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border-radius:999px;padding:10px 18px;font-weight:700;border:1px solid var(--line);background:rgba(255,255,255,.12)}
+.btn.main{background:linear-gradient(135deg,var(--sky),var(--ice));color:var(--navy);border:0}
+.btn:active{transform:scale(.94)}
+footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:28px}
+@media (min-width:700px){main{padding:30px 24px 60px}.grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}.hero{padding:56px 24px}.bar{padding:18px}.sheet{max-width:520px}}
+@media (min-width:1100px){main{max-width:1240px}.grid{grid-template-columns:repeat(5,1fr)}}
+@media (max-width:480px){.grid{grid-template-columns:repeat(2,1fr);gap:10px}.card{padding:8px}.card h3{font-size:.88rem}.art{font-size:1.2rem}.tag{font-size:.64rem}.bm{top:14px;right:14px;width:30px;height:30px}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.card{opacity:1}}
+</style>
+</head>
+<body>
+<svg style="display:none" aria-hidden="true">
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2.2 6.8H21l-5.6 4.1 2.1 6.8L12 15.6 6.5 19.7l2.1-6.8L3 8.8h6.8z"/></symbol>
+<symbol id="i-dice" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="8" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+<symbol id="i-bm" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<main>
+<nav class="glass blur">
+<div class="logo"><svg class="ic"><use href="#i-spark"/></svg>NEXTWATCH</div>
+<button class="wlb" id="wlb" aria-pressed="false"><svg class="ic"><use href="#i-bm"/></svg>Watchlist<span class="cnt" id="cnt">0</span></button>
+</nav>
+<header class="hero glass blur">
+<h1>Find your next <span>obsession</span></h1>
+<p>Pick a mood or a genre, or let fate choose your next anime.</p>
+<button class="big" id="rand"><svg class="ic"><use href="#i-dice"/></svg>Surprise me</button>
+</header>
+<section class="bar glass blur">
+<div class="sw"><svg class="ic"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search anime…" aria-label="Search anime"></div>
+<div><div class="lbl">Mood</div><div class="chips" id="moods"></div></div>
+<div><div class="lbl">Genre</div><div class="chips" id="genres"></div></div>
+</section>
+<div class="res" id="res"></div>
+<section class="grid" id="grid"></section>
+<footer>NextWatch · made for anime lovers · posters from AniList</footer>
+</main>
+<div id="modal" role="dialog" aria-modal="true"><div class="sheet glass blur" id="sheet"></div></div>
+<script>
+const D=[
+["Fullmetal Alchemist: Brotherhood",2009,"S","Action,Adventure,Fantasy","hype,cry","Two brothers chase the Philosopher’s Stone after a forbidden ritual."],
+["Death Note",2006,"S","Thriller,Mystery","mind","A student finds a notebook that kills. A genius detective closes in."],
+["Attack on Titan",2013,"S","Action,Drama,Thriller","hype,mind","Humanity hides behind walls from giant man-eating Titans."],
+["Spy x Family",2022,"S","Comedy,Action","laugh,love","A spy, an assassin and a telepath fake a family. Wholesome chaos."],
+["Your Name",2016,"M","Romance,Fantasy,Drama","love,cry","Two strangers swap bodies and are pulled into a story across time."],
+["Haikyu!!",2014,"S","Sports,Comedy","hype","A short boy with huge dreams joins a team of volleyball misfits."],
+["Frieren: Beyond Journey’s End",2023,"S","Fantasy,Slice of Life,Adventure","cry,chill","After the hero party wins, an elf mage learns what time really means."],
+["Kaguya-sama: Love Is War",2019,"S","Romance,Comedy","laugh,love","Two top students refuse to confess first and wage mind games instead."],
+["Mushoku Tensei",2021,"S","Isekai,Fantasy,Drama","hype","A man reborn in a magic world vows to live with no regrets."],
+["KonoSuba",2016,"S","Isekai,Comedy","laugh","A hopeless party of misfits tries to survive a fantasy world."],
+["Violet Evergarden",2018,"S","Drama,Slice of Life,Fantasy","cry","A former soldier writes letters and slowly learns what love means."],
+["Barakamon",2014,"S","Slice of Life,Comedy","chill,laugh","A calligrapher moves to a tiny island and rediscovers his passion."],
+["Jujutsu Kaisen",2020,"S","Action,Fantasy","hype","A teen swallows a cursed finger and joins the world of sorcerers."],
+["Steins;Gate",2011,"S","Sci-Fi,Thriller","mind,cry","A messaging experiment turns out to send texts into the past."],
+["Cowboy Bebop",1998,"S","Sci-Fi,Action","chill,cry","Bounty hunters drift through space in a stylish, jazzy classic."],
+["One Punch Man",2015,"S","Action,Comedy","laugh,hype","A hero who wins with one punch is bored of being too strong."],
+["Demon Slayer",2019,"S","Action,Fantasy","hype,cry","A boy hunts demons to cure his sister, with stunning animation."],
+["My Hero Academia",2016,"S","Action,Adventure","hype","In a world of superpowers, a powerless boy inherits the greatest one."],
+["Naruto",2002,"S","Action,Adventure","hype,cry","An outcast ninja dreams of becoming the leader of his village."],
+["One Piece",1999,"S","Adventure,Action,Comedy","hype,laugh","A rubber-bodied pirate sails the seas to find the ultimate treasure."],
+["Hunter x Hunter",2011,"S","Adventure,Action,Fantasy","hype,mind","A boy becomes a Hunter to find his father, and meets brilliant villains."],
+["Dragon Ball Z",1989,"S","Action,Adventure","hype","Earth’s defenders push past every limit against galactic threats."],
+["Bleach",2004,"S","Action,Fantasy","hype","A teen with spirit powers becomes a Soul Reaper to protect the living."],
+["Chainsaw Man",2022,"S","Action,Fantasy,Thriller","hype","A broke devil hunter fuses with his chainsaw dog and goes wild."],
+["Vinland Saga",2019,"S","Action,Drama,Adventure","mind,cry","A young Viking seeks revenge, then searches for a true meaning of strength."],
+["Monster",2004,"S","Thriller,Mystery,Drama","mind","A surgeon hunts the patient he saved, who turned into a killer."],
+["Code Geass",2006,"S","Sci-Fi,Thriller,Action","mind,hype","An exiled prince gains a mind-control power and starts a rebellion."],
+["Neon Genesis Evangelion",1995,"S","Sci-Fi,Drama,Action","mind","Teens pilot giant machines in a story that explores the human mind."],
+["Clannad: After Story",2008,"S","Drama,Romance,Slice of Life","cry,love","A heartfelt story about family, growing up and loss. Bring tissues."],
+["Anohana",2011,"S","Drama,Slice of Life","cry","Childhood friends reunite after the ghost of their lost friend appears."],
+["Your Lie in April",2014,"S","Romance,Drama","cry,love","A broken pianist is pulled back to music by a free-spirited violinist."],
+["A Silent Voice",2016,"M","Drama,Romance","cry","A bully tries to atone to the deaf girl he tormented years ago."],
+["Weathering With You",2019,"M","Romance,Fantasy,Drama","love,chill","A runaway teen meets a girl who can control the weather in Tokyo."],
+["Spirited Away",2001,"M","Fantasy,Adventure","chill,mind","A girl enters a spirit world and must work to free her parents."],
+["Natsume’s Book of Friends",2008,"S","Slice of Life,Fantasy","chill,cry","A boy who sees spirits returns the names bound in a mysterious book."],
+["Mob Psycho 100",2016,"S","Comedy,Action,Fantasy","laugh,hype,cry","A powerful psychic just wants a normal life and to improve himself."],
+["Gintama",2006,"S","Comedy,Action,Sci-Fi","laugh,cry","Samurai odd-jobbers in an alien-occupied Edo. Absurd and heartfelt."],
+["Grand Blue",2018,"S","Comedy,Slice of Life","laugh","A freshman’s diving club life is mostly drinking and absolute chaos."],
+["Toradora!",2008,"S","Romance,Comedy,Drama","love,laugh","Two classmates team up to win their crushes and find something more."],
+["Horimiya",2021,"S","Romance,Slice of Life,Comedy","love,chill","Two students reveal hidden sides of themselves and grow close."],
+["Re:Zero",2016,"S","Isekai,Thriller,Drama","mind,cry","A shut-in is sent to another world and returns to life each time he dies."],
+["That Time I Got Reincarnated as a Slime",2018,"S","Isekai,Fantasy,Adventure","chill,hype","A man reborn as a slime builds a nation of monsters and allies."],
+["Sword Art Online",2012,"S","Isekai,Action,Romance","hype,love","Players are trapped in a VR game where dying means real death."],
+["Overlord",2015,"S","Isekai,Fantasy,Action","hype","A player stuck in his game as a skeletal overlord takes over the world."],
+["Kuroko’s Basketball",2012,"S","Sports,Action","hype","A phantom sixth man and a rising ace aim to defeat the Generation of Miracles."],
+["Blue Lock",2022,"S","Sports,Drama","hype,mind","Strikers are locked in a brutal program to create Japan’s greatest ego."],
+["Slam Dunk",1993,"S","Sports,Comedy","hype,laugh","A delinquent joins his school’s basketball team to impress a girl."],
+["Laid-Back Camp",2018,"S","Slice of Life","chill","Cozy camping trips in the Japanese mountains with great food and scenery."],
+["Mushishi",2005,"S","Fantasy,Slice of Life,Mystery","chill,mind","A wanderer helps people troubled by strange, ancient life forms."],
+["Made in Abyss",2017,"S","Adventure,Fantasy,Mystery","mind,cry","Kids descend into a vast, beautiful, deadly pit to find a lost mother."],
+["Dr. Stone",2019,"S","Sci-Fi,Adventure,Comedy","hype,laugh","Humanity is petrified for millennia. A genius rebuilds civilization with science."],
+["Cyberpunk: Edgerunners",2022,"S","Sci-Fi,Action,Drama","cry,hype","A street kid fights to survive in a neon city ruled by corporations."],
+["Bocchi the Rock!",2022,"S","Comedy,Slice of Life","laugh,chill","A painfully shy guitarist tries to join a band and make friends."],
+["Oshi no Ko",2023,"S","Drama,Mystery,Thriller","mind","A fan is reborn as the child of his idol and uncovers the dark side of fame."],
+["Dandadan",2024,"S","Action,Comedy,Fantasy","laugh,hype","A skeptic of ghosts and a believer in aliens get pulled into the supernatural."],
+["Solo Leveling",2024,"S","Action,Fantasy","hype","The weakest hunter gains a system that lets him level up without limits."],
+["Delicious in Dungeon",2024,"S","Fantasy,Comedy,Adventure","chill,laugh","Adventurers cook and eat the monsters they defeat while delving a dungeon."],
+["The Apothecary Diaries",2023,"S","Mystery,Drama","mind,chill","A sharp apothecary in the imperial palace solves puzzles with poison knowledge."]
+];
+const A=D.map((r,i)=>({id:i,t:r[0],y:r[1],m:r[2]==="M"?"Movie":"Series",g:r[3].split(","),k:r[4].split(","),d:r[5]}));
+const MOODS={hype:"Hype me up",cry:"Make me cry",chill:"Chill vibes",mind:"Mind-bending",laugh:"Laugh out loud",love:"Feel the love"};
+const GEN=[...new Set(A.flatMap(a=>a.g))].sort();
+const $=id=>document.getElementById(id);
+let mood="",genre="",q="",onlyWL=false,WL=new Set();
+try{WL=new Set(JSON.parse(localStorage.getItem("nw_wl")||"[]"))}catch(e){}
+const save=()=>{try{localStorage.setItem("nw_wl",JSON.stringify([...WL]))}catch(e){}};
+const ico=n=>`<svg class="ic"><use href="#i-${n}"/></svg>`;
+function artStyle(i){return `background:radial-gradient(circle at ${(i*37)%100}% ${(i*61)%100}%,rgba(159,223,240,.95),transparent 55%),linear-gradient(${(i*47)%360}deg,#055699,#1b365d)`}
+const ini=t=>t.split(/[\s:]+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("");
+const MO={Action:'<path class="f" d="M60 4L42 32h14L46 56 78 22H62z"/><path d="M10 50L40 10M20 56L50 16"/>',Adventure:'<path class="f" d="M0 56L28 20l14 18 16-26 42 44z"/><circle cx="78" cy="14" r="7"/>',Comedy:'<circle class="f" cx="70" cy="30" r="22"/><path d="M60 24v4M80 24v4M60 36q10 10 20 0"/>',Drama:'<path class="f" d="M70 8a22 22 0 1 0 14 38A18 18 0 0 1 70 8z"/><path d="M20 18q-6 10 0 14q6-4 0-14z"/>',Fantasy:'<path class="f" d="M52 56V32h8v-8h6v8h8v-8h6v8h8V56z"/><path d="M24 12l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>',Isekai:'<circle cx="68" cy="30" r="25"/><circle cx="68" cy="30" r="15"/><circle class="f" cx="68" cy="30" r="6"/>',Mystery:'<circle cx="62" cy="26" r="16"/><path d="M74 38l16 16M54 26a8 8 0 0 1 8-8"/>',Romance:'<path class="f" d="M70 54L42 28A14 14 0 0 1 70 14A14 14 0 0 1 98 28Z"/>',"Sci-Fi":'<circle class="f" cx="68" cy="30" r="14"/><ellipse cx="68" cy="30" rx="32" ry="8" transform="rotate(-20 68 30)"/>',"Slice of Life":'<circle class="f" cx="70" cy="30" r="12"/><path d="M70 6v6M70 48v6M46 30h6M88 30h6M53 13l4 4M83 43l4 4M87 13l-4 4M57 43l-4 4"/>',Sports:'<circle class="f" cx="68" cy="30" r="22"/><path d="M46 30h44M68 8v44M52 14q16 16 0 32M84 14q-16 16 0 32"/>',Thriller:'<path d="M44 30q24-24 48 0q-24 24-48 0z"/><circle class="f" cx="68" cy="30" r="8"/>'};
+const art=a=>`<div class="art" style="${artStyle(a.id)}"><svg class="m" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid slice">${MO[a.g[0]]||""}</svg>${a.img?im(a):""}${ini(a.t)}<i>${a.y}</i></div>`;
+const im=a=>`<img src="${a.img}" alt="" loading="lazy" referrerpolicy="no-referrer" onload="this.classList.add('ok');this.parentNode.classList.add('has')" onerror="this.remove()">`;
+function list(){const s=q.toLowerCase();return A.filter(a=>(!mood||a.k.includes(mood))&&(!genre||a.g.includes(genre))&&(!onlyWL||WL.has(a.id))&&a.t.toLowerCase().includes(s))}
+function chips(){
+$("moods").innerHTML=Object.entries(MOODS).map(([k,v])=>`<button class="chip${mood===k?" on":""}" data-m="${k}">${v}</button>`).join("");
+$("genres").innerHTML=GEN.map(g=>`<button class="chip${genre===g?" on":""}" data-g="${g}">${g}</button>`).join("");
+}
+function render(){
+const L=list();
+$("res").textContent=L.length+" anime found";
+$("grid").innerHTML=L.length?L.map((a,i)=>`<article class="card glass" data-id="${a.id}" style="animation-delay:${Math.min(i,14)*45}ms">${art(a)}<button class="bm${WL.has(a.id)?" on":""}" aria-label="Toggle watchlist">${ico("bm")}</button><h3>${a.t}</h3><div class="meta">${a.m} · ${a.y}</div><div class="tags">${a.g.slice(0,2).map(x=>`<span class="tag">${x}</span>`).join("")}</div></article>`).join(""):'<div class="empty glass">Nothing matches. Try another mood or genre.</div>';
+$("cnt").textContent=WL.size;
+}
+function burst(x,y){
+const c=["#9fdff0","#63c0e4","#ffffff","#055699"];
+for(let i=0;i<10;i++){
+const d=document.createElement("div");d.className="dot";d.style.left=x+"px";d.style.top=y+"px";d.style.background=c[i%4];
+document.body.appendChild(d);
+const a=Math.PI*2*i/10,r=40+Math.random()*60;
+d.animate([{transform:"translate(0,0) scale(1)",opacity:1},{transform:`translate(${Math.cos(a)*r}px,${Math.sin(a)*r}px) scale(0)`,opacity:0}],{duration:650+Math.random()*250,easing:"cubic-bezier(.2,.8,.3,1)"}).onfinish=()=>d.remove();
+}}
+function toggle(id){
+WL.has(id)?WL.delete(id):WL.add(id);save();
+const c=$("cnt");c.textContent=WL.size;c.classList.remove("bump");void c.offsetWidth;c.classList.add("bump");
+}
+function detail(a){
+const on=WL.has(a.id);
+$("sheet").innerHTML=`<button class="x" id="cl" aria-label="Close">${ico("x")}</button>${art(a)}<h2>${a.t}</h2><div class="meta">${a.m} · ${a.y} · ${a.g.join(", ")}</div><p>${a.d}</p><div class="tags" style="margin-bottom:16px">${a.k.map(k=>`<span class="tag">${MOODS[k]}</span>`).join("")}</div><div class="row"><button class="btn main" id="sv" data-id="${a.id}">${ico("bm")} ${on?"Saved":"Add to watchlist"}</button><button class="btn" id="again">${ico("dice")} Another</button></div>`;
+}
+function open(a){detail(a);$("modal").classList.add("show")}
+function close(){$("modal").classList.remove("show")}
+function surprise(x,y){
+const pool=list().length?list():A;
+const fin=pool[Math.floor(Math.random()*pool.length)];
+$("modal").classList.add("show");
+$("sheet").innerHTML=`<div class="art shuf" style="${artStyle(0)}">?</div><h2 class="shuf" id="sh">Rolling…</h2>`;
+let n=0;const iv=setInterval(()=>{
+const r=pool[Math.floor(Math.random()*pool.length)];
+const h=$("sh");if(h)h.textContent=r.t;n++;
+if(n>12){clearInterval(iv);detail(fin);burst(innerWidth/2,innerHeight/2)}
+},75);
+}
+document.addEventListener("pointerdown",e=>{
+const b=e.target.closest("button,.card");
+if(b){const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)/2,p=document.createElement("span");p.className="ripple";p.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;if(getComputedStyle(b).position==="static")b.style.position="relative";b.appendChild(p);setTimeout(()=>p.remove(),650);burst(e.clientX,e.clientY)}
+});
+$("moods").addEventListener("click",e=>{const m=e.target.dataset.m;if(!m)return;mood=mood===m?"":m;chips();render()});
+$("genres").addEventListener("click",e=>{const g=e.target.dataset.g;if(!g)return;genre=genre===g?"":g;chips();render()});
+$("q").addEventListener("input",e=>{q=e.target.value.trim();render()});
+$("wlb").addEventListener("click",e=>{onlyWL=!onlyWL;e.currentTarget.classList.toggle("on",onlyWL);e.currentTarget.setAttribute("aria-pressed",onlyWL);render()});
+$("rand").addEventListener("click",surprise);
+$("grid").addEventListener("click",e=>{
+const c=e.target.closest(".card");if(!c)return;
+const id=+c.dataset.id;
+if(e.target.closest(".bm")){toggle(id);if(onlyWL)render();else e.target.closest(".bm").classList.toggle("on",WL.has(id));return}
+open(A[id]);
+});
+let tk=0;$("grid").addEventListener("pointermove",e=>{
+if(e.pointerType!=="mouse"||tk)return;tk=1;requestAnimationFrame(()=>tk=0);
+const c=e.target.closest(".card");if(!c)return;
+const r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+c.style.setProperty("--ry",((px-.5)*14)+"deg");c.style.setProperty("--rx",((.5-py)*14)+"deg");
+c.style.setProperty("--gx",px*100+"%");c.style.setProperty("--gy",py*100+"%");
+});
+$("grid").addEventListener("pointerout",e=>{const c=e.target.closest(".card");if(c){c.style.setProperty("--rx","0deg");c.style.setProperty("--ry","0deg")}});
+$("modal").addEventListener("click",e=>{
+if(e.target.id==="modal"||e.target.closest("#cl"))return close();
+const sv=e.target.closest("#sv");
+if(sv){const id=+sv.dataset.id;toggle(id);sv.innerHTML=ico("bm")+" "+(WL.has(id)?"Saved":"Add to watchlist");const bm=document.querySelector('.card[data-id="'+id+'"] .bm');if(bm)bm.classList.toggle("on",WL.has(id));if(onlyWL)render()}
+if(e.target.closest("#again"))surprise();
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+try{const c=JSON.parse(localStorage.getItem("nw_img")||"{}");A.forEach(a=>{if(c[a.id])a.img=c[a.id]})}catch(e){}
+const esc=s=>s.replace(/’/g,"'").replace(/\\/g,"\\\\").replace(/"/g,'\\"');
+async function gql(q){const r=await fetch("https://graphql.anilist.co",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({query:q})});const j=await r.json();return j.data||{}}
+function paint(a){document.querySelectorAll(`.card[data-id="${a.id}"] .art`).forEach(el=>{if(!el.querySelector("img"))el.insertAdjacentHTML("afterbegin",im(a))})}
+async function pull(items,yr){
+for(let i=0;i<items.length;i+=10){
+const ch=items.slice(i,i+10);
+const q="{"+ch.map(a=>`a${a.id}:Media(search:"${esc(a.t)}",type:ANIME${yr?",seasonYear:"+a.y:""}){coverImage{large}}`).join(" ")+"}";
+try{const d=await gql(q);ch.forEach(a=>{const m=d["a"+a.id];if(m&&m.coverImage&&m.coverImage.large){a.img=m.coverImage.large;paint(a)}})}catch(e){}
+}}
+async function loadPosters(){
+let t=A.filter(a=>!a.img);
+if(!t.length)return;
+await pull(t,true);
+t=A.filter(a=>!a.img);
+if(t.length)await pull(t,false);
+try{const c={};A.forEach(a=>{if(a.img)c[a.id]=a.img});localStorage.setItem("nw_img",JSON.stringify(c))}catch(e){}
+}
+chips();render();loadPosters();
+</script>
+</body>
+</html>
